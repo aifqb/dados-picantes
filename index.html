@@ -311,8 +311,12 @@ body.dim-mode #gameScreen .bottom-btns { opacity: 0.05; pointer-events: none; }
 }
 .mode-pill.active-verdad { border-color: #4a9eff; color: #4a9eff; background: #0a1520; }
 .mode-pill.active-reto   { border-color: var(--accent1); color: var(--accent1); background: #1a0a12; }
+.mode-pill.active-vyr    { border-color: #4a9eff; color: #4a9eff; background: #0a1520; }
 .mode-pill.active-dados  { border-color: var(--accent2); color: var(--accent2); background: #1a0a1a; }
 .mode-pill.active-ambos  { border-color: var(--accent3); color: #b09eff; background: #120a1a; }
+
+h2, h3, .big-title, .game-title, .result-card .combo, .special-card-content { text-wrap: balance; }
+.rules-section p, .rules-section li { text-wrap: pretty; }
 
 .turn-banner { font-size: 0.98rem; color: var(--gold); font-style: italic; font-family: 'Playfair Display', Georgia, serif; margin-bottom: 2px; text-align: center; }
 .instr-banner { font-size: 0.76rem; color: var(--muted); margin-bottom: 12px; text-align: center; font-style: italic; }
@@ -737,35 +741,58 @@ const EXTREMO_COMBOS = {
   nb:["Beso negro completo","Filmarse 30 seg mientras lo hacen","El receptor pide lo que quiera y se cumple","Estimular genitales con la lengua 1 minuto sin parar","Tomar una foto para el álbum secreto 📸","No parar hasta que pida parar","Masaje erótico con aceite antes de lo que siga","El receptor elige, sin negociar"]
 };
 
-const VERDADES = [
-  "¿Cuál es tu fantasía que nunca le contaste a nadie?",
-  "¿Dónde es el lugar más raro donde pensaste en hacer algo?",
-  "¿Qué parte del cuerpo del otro te vuelve loco/a?",
-  "¿Cuál fue el momento más excitante que viviste juntos?",
-  "¿Hay algo que siempre quisiste pedirle al otro y no te animaste?",
-  "¿Qué prenda de ropa del otro te pone más?",
-  "Si pudieras tener un superpoder sexual, ¿cuál sería?",
-  "¿Cuál fue el peor lugar donde intentaste algo íntimo?",
-  "¿Cuál es la hora del día que más te provoca estar con el otro?",
-  "¿Tenés algún fetiche que no sabe el otro?",
-  "¿Cuál es la parte del cuerpo de tu pareja que más te gusta?",
-  "¿Qué harías si el otro te despertara a las 3AM para algo especial?",
-  "¿Cuál fue la vez que más te costó contenerte con el otro?",
-  "¿Qué película o escena te excitó más viendo junto a tu pareja?",
-  "¿Hay algo que el otro haga que te vuelva completamente loco/a?"
-];
+const VERDADES_POR_NIVEL = {
+  1: [
+    "¿Qué fue lo primero que te atrajo de mí cuando nos conocimos?",
+    "¿Qué parte del cuerpo del otro te parece más sexy vestida?",
+    "¿Cuál fue el beso que más te gustó que nos dimos?",
+    "¿Qué prenda de ropa mía te encanta cómo me queda?",
+    "¿En qué momento del día te dan más ganas de abrazarme o besarme?",
+    "¿Qué canción te hace pensar en estar conmigo a solas?",
+    "¿Cuál fue nuestra cita o salida donde más tensión sentiste?",
+    "¿Qué caricia te relaja y te enciende al mismo tiempo?"
+  ],
+  2: [
+    "¿Dónde es el lugar más raro donde pensaste en hacer algo conmigo?",
+    "¿Qué parte de mi cuerpo te vuelve loco/a cuando la toco o la ves?",
+    "¿Cuál fue el momento más excitante que vivimos juntos hasta ahora?",
+    "¿Cuál es la hora del día que más te provoca estar conmigo?",
+    "¿Qué película o escena te excitó más viendo juntos?",
+    "¿Qué harías si te despierto a las 3 AM con besos en el cuello?",
+    "¿Cuál fue la vez que más te costó contenerte las ganas conmigo?",
+    "¿Qué te gusta más: que tome la iniciativa yo o tomarla vos?"
+  ],
+  3: [
+    "¿Cuál es esa fantasía íntima que todavía no nos animamos a probar?",
+    "¿Hay algo que siempre quisiste pedirme en la cama y te dio pudor?",
+    "¿Si pudieras elegir exactamente qué te haga hoy durante 10 minutos, qué sería?",
+    "¿Qué es lo que te hago que te lleva al límite más rápido?",
+    "¿En qué lugar fuera de la cama te gustaría que lo hagamos pronto?",
+    "¿Te excita más hacerlo con la luz encendida mirándonos o a oscuras?",
+    "¿Cuál es el recuerdo más caliente que tenés de nosotros dos?"
+  ],
+  4: [
+    "¿Tenés algún fetiche secreto que todavía no me contaste?",
+    "¿Te gustaría que nos grabemos o saquemos fotos íntimas esta noche?",
+    "¿Qué es lo más atrevido o prohibido que te gustaría hacerme ahora mismo?",
+    "¿Si hoy no hubiera ningún límite, qué me pedirías que haga sin decir que no?",
+    "¿Cuál fue el pensamiento más sucio que tuviste sobre mí esta semana?",
+    "¿Qué rol o juego de dominación/sumisión te daría morbo probar conmigo?"
+  ]
+};
 
 const DESAFIOS_ESPECIALES = [
-  "🎭 Ambos tienen que actuar un rol por 2 minutos. El actor famoso que elijan.",
-  "🎵 El que pierde el próximo turno tiene que cantar una canción sin ropa.",
-  "🎯 El que tira primero decide una regla que vale por las próximas 3 rondas.",
-  "🔥 Los dos tienen que hacer algo al mismo tiempo — sin separarse — durante 60 segundos.",
-  "📸 Foto polaroid del momento: cada uno elige la pose.",
-  "🎪 El que pierda el próximo dado tiene que cumplir lo que diga el otro sin chistar.",
-  "🍓 Usar algo de la cocina en la próxima acción (sin salir de la habitación).",
-  "🕯️ Apaguen una luz extra. Las próximas 2 rondas con menos luz.",
-  "💬 Cada uno dice una fantasía que quiera probar ESTA noche. Las dos se cumplen.",
-  "⏳ El próximo reto se hace en cámara lenta y en silencio absoluto."
+  "🎭 Ambos tienen que actuar un rol por 2 minutos. El personaje que elijan.",
+  "🎵 El que pierde el próximo turno tiene que quitarse una prenda a elección del otro.",
+  "🎯 Quien tiró decide una regla que vale por las próximas 3 rondas.",
+  "🔥 Los dos tienen que besarse y acariciarse sin parar durante 60 segundos.",
+  "📸 Foto del momento: cada uno elige cómo posan.",
+  "🎪 En el próximo turno, el receptor elige exactamente la zona del cuerpo.",
+  "🧊 Usar algo frío o tibio (o soplar/humedecer) en la próxima acción.",
+  "🕯️ Bajen la intensidad de la luz (o activen el modo oscuro 🌙) por 3 rondas.",
+  "💬 Cada uno confiesa algo que quiere probar ESTA noche.",
+  "⏳ El próximo reto se hace en cámara súper lenta y en silencio absoluto.",
+  "👀 Contacto visual fijo durante 45 segundos mientras se acarician."
 ];
 
 // =============================================
@@ -785,6 +812,8 @@ let roundCount    = 0;
 let totalRounds   = 0;
 let gameMode      = 'dados';
 let jokers        = [{paso:2,doble:2},{paso:2,doble:2}];
+let lastActionResult = null;
+let deckBags      = {};
 let soundOn       = true;
 let dimMode       = false;
 let wakeLock      = null;
@@ -958,6 +987,8 @@ document.getElementById('rulesModal').addEventListener('click', e => {
   if (e.target === document.getElementById('rulesModal')) closeRules();
 });
 
+let pendingSpecialChallenge = false;
+
 function showSpecialCard(type, content, iconEmoji) {
   document.getElementById('specialIcon').textContent    = iconEmoji;
   document.getElementById('specialType').textContent    = type;
@@ -967,7 +998,15 @@ function showSpecialCard(type, content, iconEmoji) {
   document.getElementById('specialOverlay').classList.add('open');
   vibrate([100,50,100,50,200]);
 }
-function closeSpecial() { document.getElementById('specialOverlay').classList.remove('open'); }
+function closeSpecial() {
+  document.getElementById('specialOverlay').classList.remove('open');
+  if (pendingSpecialChallenge) {
+    pendingSpecialChallenge = false;
+    setTimeout(() => {
+      showSpecialCard('DESAFÍO ESPECIAL', drawFromBag('desafios', DESAFIOS_ESPECIALES), '🎭');
+    }, 350);
+  }
+}
 
 // =============================================
 // CHOICE OVERLAY — reemplaza confirm()
@@ -1053,6 +1092,8 @@ function startGame() {
   players[1].name = document.getElementById('name2').value.trim() || 'Jugador 2';
   savePlayerData();
   currentTurn = 0; roundCount = 0; totalRounds = 0;
+  lastActionResult = null;
+  deckBags = {};
   document.getElementById('historyList').innerHTML = '';
   jokers = [{paso:2,doble:2},{paso:2,doble:2}];
   stopTimer(); initMode();
@@ -1205,12 +1246,34 @@ function setMode(m) {
 
 function pick(arr) { return arr[Math.floor(Math.random() * arr.length)]; }
 
+function drawFromBag(key, sourceArr) {
+  if (!deckBags[key] || deckBags[key].length === 0) {
+    const copy = sourceArr.slice();
+    for (let i = copy.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [copy[i], copy[j]] = [copy[j], copy[i]];
+    }
+    deckBags[key] = copy;
+  }
+  return deckBags[key].pop();
+}
+
+function escapeHtml(str) {
+  return String(str).replace(/[&<>"']/g, m => ({
+    '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'
+  }[m]));
+}
+
 // =============================================
 // COMODINES
 // =============================================
 function useJoker(type, pi) {
   if (pi === undefined) pi = currentTurn;
   if (jokers[pi][type] <= 0) { showToast('❌ Sin comodines ' + type + ' disponibles'); return; }
+  if (type === 'doble' && !lastActionResult) {
+    showToast('🎲 Primero lancen los dados antes de usar Doble');
+    return;
+  }
   jokers[pi][type]--;
   buildJokerBar();
   vibrate([80,40,80]);
@@ -1219,8 +1282,16 @@ function useJoker(type, pi) {
     currentTurn = currentTurn === 0 ? 1 : 0;
     refreshTurnUI(); resetDice(); stopTimer();
   } else {
-    showToast('🔁 El otro tiene que hacer lo mismo');
-    showSpecialCard('COMODÍN', players[currentTurn === 0 ? 1 : 0].name + ' tiene que hacer exactamente lo mismo que se mostró.', '🔁');
+    const otherIdx = pi === 0 ? 1 : 0;
+    const otherPlayer = players[otherIdx];
+    const usedBy = players[pi];
+    const actionTxt = lastActionResult ? ` ("${lastActionResult.comboText}")` : '';
+    showToast('🔁 ¡Doble activado por ' + usedBy.name + '!');
+    showSpecialCard(
+      'COMODÍN',
+      `${otherPlayer.name} tiene que repetir o recibir exactamente la última jugada${actionTxt}.`,
+      '🔁'
+    );
   }
 }
 
@@ -1243,6 +1314,20 @@ function toggleDim() {
 // =============================================
 // LANZAR
 // =============================================
+function checkMilestoneAndLevelUp() {
+  if (roundCount === 3 && currentLevel < 4) {
+    setTimeout(() => showToast('✨ ¡3 rondas! ¿Suben de nivel?'), 600);
+  }
+  if (totalRounds > 0 && totalRounds % 5 === 0) {
+    setTimeout(() => {
+      const specialOverlay = document.getElementById('specialOverlay');
+      if (!specialOverlay.classList.contains('open')) {
+        showSpecialCard('DESAFÍO ESPECIAL', drawFromBag('desafios', DESAFIOS_ESPECIALES), '🎭');
+      }
+    }, 900);
+  }
+}
+
 function roll() {
   if (isRolling) return;
   initAudio();
@@ -1255,13 +1340,23 @@ function roll() {
       players[currentTurn].name,
       // Verdad
       () => {
-        const q = pick(VERDADES);
+        const actor = players[currentTurn];
+        const verdadesPool = VERDADES_POR_NIVEL[currentLevel] || VERDADES_POR_NIVEL[1];
+        const q = drawFromBag('verdades_' + currentLevel, verdadesPool);
+        lastActionResult = { comboText: '💭 ' + q, actorIdx: currentTurn };
+        addHistory(actor.name, '💭 ' + q);
         showSpecialCard('VERDAD', q, '💭');
         vibrate([60,30,60]);
         currentTurn = currentTurn === 0 ? 1 : 0;
         refreshTurnUI();
         roundCount++; totalRounds++;
         buildRoundBar();
+        if (totalRounds > 0 && totalRounds % 5 === 0) {
+          pendingSpecialChallenge = true;
+        }
+        if (roundCount === 3 && currentLevel < 4) {
+          setTimeout(() => showToast('✨ ¡3 rondas! ¿Suben de nivel?'), 600);
+        }
       },
       // Reto → ejecuta el lanzamiento de dados
       () => { doRoll(); }
@@ -1279,10 +1374,6 @@ function doRoll() {
   document.getElementById('rollBtn').disabled = true;
   vibrate([30,20,30,20,50]);
 
-  if (totalRounds > 0 && totalRounds % 5 === 0) {
-    setTimeout(() => showSpecialCard('DESAFÍO ESPECIAL', pick(DESAFIOS_ESPECIALES), '🎭'), 1200);
-  }
-
   const da = document.getElementById('diceAction');
   const db = document.getElementById('diceBody');
   da.classList.add('rolling'); db.classList.add('rolling');
@@ -1295,26 +1386,27 @@ function doRoll() {
   const iv = setInterval(() => {
     playDiceSound();
     if (isExtremo) {
-      da.innerHTML = `<span class="emoji">💀</span><span style="font-size:0.72rem">${pick(EXTREMO_COMBOS[receiverGend])}</span>`;
+      da.innerHTML = `<span class="emoji">💀</span><span style="font-size:0.72rem">${escapeHtml(pick(EXTREMO_COMBOS[receiverGend]))}</span>`;
       db.innerHTML = `<span class="emoji">🔥</span><span>—</span>`;
     } else {
-      da.innerHTML = `<span class="emoji">🎲</span><span>${pick(ACCIONES[currentLevel])}</span>`;
-      db.innerHTML = `<span class="emoji">🎲</span><span>${pick(PARTES[currentLevel][receiverGend])}</span>`;
+      da.innerHTML = `<span class="emoji">🎲</span><span>${escapeHtml(pick(ACCIONES[currentLevel]))}</span>`;
+      db.innerHTML = `<span class="emoji">🎲</span><span>${escapeHtml(pick(PARTES[currentLevel][receiverGend]))}</span>`;
     }
     ticks++;
     if (ticks >= 10) {
       clearInterval(iv);
       let accion, parte, comboText;
       if (isExtremo) {
-        accion = pick(EXTREMO_COMBOS[receiverGend]); parte = null;
-        da.innerHTML = `<span class="emoji">💀</span><span style="font-size:0.72rem">${accion}</span>`;
+        accion = drawFromBag(`extremo_${receiverGend}`, EXTREMO_COMBOS[receiverGend]);
+        parte = null;
+        da.innerHTML = `<span class="emoji">💀</span><span style="font-size:0.72rem">${escapeHtml(accion)}</span>`;
         db.innerHTML = `<span class="emoji">🔥</span><span>—</span>`;
         comboText = accion;
       } else {
-        accion = pick(ACCIONES[currentLevel]);
-        parte  = pick(PARTES[currentLevel][receiverGend]);
-        da.innerHTML = `<span class="emoji">💋</span><span>${accion}</span>`;
-        db.innerHTML = `<span class="emoji">🔥</span><span>${parte}</span>`;
+        accion = drawFromBag(`acciones_${currentLevel}`, ACCIONES[currentLevel]);
+        parte  = drawFromBag(`partes_${currentLevel}_${receiverGend}`, PARTES[currentLevel][receiverGend]);
+        da.innerHTML = `<span class="emoji">💋</span><span>${escapeHtml(accion)}</span>`;
+        db.innerHTML = `<span class="emoji">🔥</span><span>${escapeHtml(parte)}</span>`;
         comboText = `${accion} ${parte}`;
       }
       da.classList.remove('rolling'); db.classList.remove('rolling');
@@ -1326,22 +1418,31 @@ function doRoll() {
 }
 
 function showResult(comboText) {
-  const actor       = players[currentTurn];
+  const actorIdx    = currentTurn;
+  const actor       = players[actorIdx];
   const receiverIdx = currentTurn === 0 ? 1 : 0;
   const receiver    = players[receiverIdx];
   const flame       = ['🌶️','🌶️🌶️','🔥🔥','💀'][currentLevel - 1];
 
-  document.getElementById('resultCard').innerHTML = `
-    <div class="combo">${comboText}</div>
-    <div class="receiver">${actor.name} → ${receiver.name} &nbsp;${flame}</div>
-  `;
+  lastActionResult = { comboText, actorIdx, receiverIdx };
+
+  const resultCard = document.getElementById('resultCard');
+  resultCard.innerHTML = '';
+  const comboEl = document.createElement('div');
+  comboEl.className = 'combo';
+  comboEl.textContent = comboText;
+  const recEl = document.createElement('div');
+  recEl.className = 'receiver';
+  recEl.textContent = `${actor.name} → ${receiver.name}  ${flame}`;
+  resultCard.appendChild(comboEl);
+  resultCard.appendChild(recEl);
 
   addHistory(actor.name, comboText);
   roundCount++; totalRounds++;
   buildRoundBar();
-  if (roundCount === 3 && currentLevel < 4) setTimeout(() => showToast('✨ ¡3 rondas! ¿Suben de nivel?'), 600);
+  checkMilestoneAndLevelUp();
 
-  if (timerSecs > 0) startTimer(timerSecs);
+  if (timerSecs > 0) prepareTimer(timerSecs);
 
   currentTurn = receiverIdx;
   refreshTurnUI();
@@ -1353,7 +1454,14 @@ function addHistory(who, what) {
   const list = document.getElementById('historyList');
   const item = document.createElement('div');
   item.className = 'history-item';
-  item.innerHTML = `<span class="who">${who}</span><span class="what">${what}</span>`;
+  const whoEl = document.createElement('span');
+  whoEl.className = 'who';
+  whoEl.textContent = who;
+  const whatEl = document.createElement('span');
+  whatEl.className = 'what';
+  whatEl.textContent = what;
+  item.appendChild(whoEl);
+  item.appendChild(whatEl);
   list.insertBefore(item, list.firstChild);
   while (list.children.length > 8) list.removeChild(list.lastChild);
 }
@@ -1361,24 +1469,38 @@ function addHistory(who, what) {
 // =============================================
 // TIMER
 // =============================================
+function prepareTimer(secs) {
+  clearInterval(timerInterval);
+  timerLeft = secs;
+  timerRunning = false;
+  document.getElementById('timerDisplay').classList.add('visible');
+  document.getElementById('pauseBtn').textContent = '▶ Iniciar (' + secs + 's)';
+  updateTimerUI(secs, secs);
+}
+
+function runTimerInterval(totalSecs) {
+  clearInterval(timerInterval);
+  timerInterval = setInterval(() => {
+    if (!timerRunning) return;
+    timerLeft--;
+    updateTimerUI(timerLeft, totalSecs);
+    if (timerLeft <= 0) {
+      clearInterval(timerInterval); timerRunning = false;
+      document.getElementById('timerNum').textContent = '⏰';
+      document.getElementById('timerArc').style.strokeDashoffset = CIRC;
+      document.getElementById('pauseBtn').textContent = '▶ Repetir';
+      playTimerDoneSound();
+      vibrate([200,100,200,100,200]);
+    }
+  }, 1000);
+}
+
 function startTimer(secs) {
   timerLeft = secs; timerRunning = true;
   document.getElementById('timerDisplay').classList.add('visible');
   document.getElementById('pauseBtn').textContent = '⏸ Pausar';
   updateTimerUI(secs, secs);
-  clearInterval(timerInterval);
-  timerInterval = setInterval(() => {
-    if (!timerRunning) return;
-    timerLeft--;
-    updateTimerUI(timerLeft, secs);
-    if (timerLeft <= 0) {
-      clearInterval(timerInterval); timerRunning = false;
-      document.getElementById('timerNum').textContent = '⏰';
-      document.getElementById('timerArc').style.strokeDashoffset = CIRC;
-      playTimerDoneSound();
-      vibrate([200,100,200,100,200]);
-    }
-  }, 1000);
+  runTimerInterval(secs);
 }
 
 function updateTimerUI(left, total) {
@@ -1390,10 +1512,15 @@ function updateTimerUI(left, total) {
 }
 
 function pauseTimer() {
+  if (timerLeft <= 0 && timerSecs > 0) {
+    startTimer(timerSecs);
+    return;
+  }
   timerRunning = !timerRunning;
   document.getElementById('pauseBtn').textContent = timerRunning ? '⏸ Pausar' : '▶ Continuar';
+  if (timerRunning) runTimerInterval(timerSecs || timerLeft);
 }
-function resetTimer() { if (timerSecs > 0) startTimer(timerSecs); }
+function resetTimer() { if (timerSecs > 0) prepareTimer(timerSecs); }
 function stopTimer() {
   clearInterval(timerInterval); timerRunning = false;
   document.getElementById('timerDisplay').classList.remove('visible');
